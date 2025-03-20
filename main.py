@@ -16,9 +16,14 @@ def send_email(message):
         server.login(username, password)
         server.sendmail(username, receiver, message)
 
+topic = "techcrunch"
+
 APIKey = "833159d37484469fa47c4f3650cce8fd"
 
-url = "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=833159d37484469fa47c4f3650cce8fd"
+url = "https://newsapi.org/v2/top-headlines?" \
+    f"sources={topic}&" \
+    "apiKey=833159d37484469fa47c4f3650cce8fd&" \
+    "language=en"
 
 # Making our request
 request = requests.get(url)
@@ -28,9 +33,12 @@ content = request.json()
 
 #  Accessing the article titles and descriptions
 body = ""
-for article in content["articles"]:
+for article in content["articles"][:20]:
     if article["title"] is not None:
-        body = body + article["title"] + "\n" + article["description"] + 2*"\n"
+        body = "Subject: TechCrunch Today" \
+            + "\n" + body + article["title"] + "\n" \
+            + article["description"] + "\n" \
+            + article["url"] + 2*"\n"
 
 body = body.encode("utf-8")
 # Calling our send email function; leaving commented for now
